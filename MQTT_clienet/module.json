@@ -1,0 +1,11 @@
+{
+	"id": "{D806E782-7A08-4BB5-BA8C-1F20A40C1C9D}",
+	"name": "MQTTClient",
+	"type": 2,
+	"vendor": "Thomas Feldmann",
+	"aliases": ["MQTT Client"],
+	"parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+	"childRequirements": [],
+	"implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}"],
+	"prefix": "MQTT"
+}
