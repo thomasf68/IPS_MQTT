@@ -334,8 +334,7 @@ class phpMQTT {
             $head .= $this->setmsglength($i);
 
             $call = $this->onSend;
-            $this->owner->$call($head);
-            $this->owner->$call($buffer);
+            $this->owner->$call($head.$buffer);
 
 	}
 
