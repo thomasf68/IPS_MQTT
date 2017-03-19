@@ -335,7 +335,7 @@ class phpMQTT {
 
             $call = $this->onSend;
             $this->owner->$call($head.$buffer);
-
+            //
 	}
 
 	/* message: processes a recieved topic */
