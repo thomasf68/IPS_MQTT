@@ -185,11 +185,12 @@
                 case self::IPS_KERNELMESSAGE:
                     $kmsg=$Data[0];
                     switch ($kmsg) {
-/*
+
                         case self::KR_READY:
-                            IPS_LogMessage(__CLASS__,__FUNCTION__." KR_Ready ->register()");
-                            $this->Register_All();
+                            IPS_LogMessage(__CLASS__,__FUNCTION__." KR_Ready ->reconect");
+                            $this->MQTTDisconnect();
                             break;
+ /*
                         case self::KR_UNINIT:
                             // not working :(
                             $msgid=$this->GetBuffer("MsgID");
@@ -329,7 +330,7 @@
                 IPS_SetProperty($cID, "Open", true); //I/O Instanz soll aktiviert sein.
                 $ok = @IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen                    
                 $clientid=$this->GetClientID();
-                        
+                
                 if ($ok) {
                     $username=$this->GetUser();
                     $password=$this->GetPassword();
@@ -372,7 +373,7 @@
                 }                                              
             }
             $this->RegisterTimerNow('Ping', 0,  'MQTT_TimerEvent('.$this->InstanceID.');');    
-            if($this->GetInstanceStatus() == self::ST_AKTIV ){
+            if($this->GetInstanceStatus() == self::ST_AKTIV ){       
                 $this->MQTTConnect();
             }
         }
