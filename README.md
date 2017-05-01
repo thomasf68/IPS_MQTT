@@ -20,4 +20,6 @@ Ereignisse:
 
         Ein Connect mit dem MQTT Broaker ist abgeschlossen
         
-Unter /IPS Scripte/Handel.php liegt ein Beispiel wie auf Ereignisse von dem Modul reagiert werden kann.
+Unter /IPS Scripte/MQTT_clienet/Handel.php liegt ein Beispiel wie auf Ereignisse von dem Modul reagiert werden kann.
+Das Script 'Publish.php' benutze ich um veränderte Variablen aus IPS zu senden.
+Mit den beiden Beispiel Scripten Sende ich Variablen Veränderungen von einem IPS zu einem Anderen. 
