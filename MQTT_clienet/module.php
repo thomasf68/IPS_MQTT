@@ -49,6 +49,9 @@
             }else{
                 $this->mqtt = NULL;
             }
+            $this->conecting = false;
+            
+           
         }
  
         // Überschreibt die interne IPS_Create($id) Funktion
@@ -57,6 +60,7 @@
             parent::Create();
  
             // Selbsterstellter Code
+            $this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}");    //Client Socet Modul
             $this->RegisterPropertyString('ClientID', 'symcon');
             $this->RegisterPropertyString('User', '');
             $this->RegisterPropertyString('Password', '');
@@ -286,6 +290,10 @@
         }
  
         public function onReceive($para) {
+            if($para['SENDER']=='MQTT_CONNECT'){
+                $clientid=$this->GetClientID();                               
+                IPS_LogMessage(__CLASS__,__FUNCTION__."::Connection to ClientID $clientid run");                
+            }
             $scriptid = $this->ReadPropertyInteger("script");
             IPS_RunScriptEx($scriptid,$para);
         }
@@ -325,34 +333,36 @@
         //
         //------------------------------------------------------------------------
         private function MQTTConnect(){
+            IPS_Sleep(1500);
             $cID=$this->GetConnectionID();
             if(is_null($this->mqtt)){
-                IPS_SetProperty($cID, "Open", true); //I/O Instanz soll aktiviert sein.
+                $ok = @IPS_SetProperty($cID, "Open", true); //I/O Instanz soll aktiviert sein.
+                if($ok){
                 $ok = @IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen                    
-                $clientid=$this->GetClientID();
-                
-                if ($ok) {
-                    $username=$this->GetUser();
-                    $password=$this->GetPassword();
-                    $owner = $this; 
-                    $this->mqtt = new phpMQTT($owner,$clientid);
-                    // callback Funktionen
-                    $this->mqtt->onSend = 'onSendText';
-                    $this->mqtt->onDebug = 'onDebug';
-                    $this->mqtt->onReceive = 'onReceive';
-                    $this->mqtt->debug = true;  
-                    if ($this->mqtt -> connect(true,null,$username,$password)) {
-                        $this->debug(__FUNCTION__,"Connected to ClientID $clientid");
-                        $this->OSave($this->mqtt,"MQTT");
-                        $this->RegisterTimerNow('Ping', $this->mqtt->keepalive*1000,  'MQTT_TimerEvent('.$this->InstanceID.');');    
+                    $clientid=$this->GetClientID();               
+                    if ($ok) {
+                        $username=$this->GetUser();
+                        $password=$this->GetPassword();
+                        $owner = $this; 
+                        $this->mqtt = new phpMQTT($owner,$clientid);
+                        // callback Funktionen
+                        $this->mqtt->onSend = 'onSendText';
+                        $this->mqtt->onDebug = 'onDebug';
+                        $this->mqtt->onReceive = 'onReceive';
+                        $this->mqtt->debug = true;  
+                        if ($this->mqtt -> connect(true,null,$username,$password)) {
+                            $this->debug(__FUNCTION__,"Connected to ClientID $clientid");
+                            $this->OSave($this->mqtt,"MQTT");
+                            $this->RegisterTimerNow('Ping', $this->mqtt->keepalive*1000,  'MQTT_TimerEvent('.$this->InstanceID.');');    
+                        }else{
+                            $ok = FALSE;
+                        }
                     }else{
-                        $ok = FALSE;
+                        IPS_LogMessage(__CLASS__,__FUNCTION__."::Connect to ClientID $clientid failed");
+                        $this->debug(__FUNCTION__,"Connect to ClientID $clientid failed");
+                        IPS_SetProperty($cID, "Open", false);
+                        IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen                    
                     }
-                }else{
-                    IPS_LogMessage(__CLASS__,__FUNCTION__."::Connect to ClientID $clientid failed");
-                    $this->debug(__FUNCTION__,"Connect to ClientID $clientid failed");
-                    IPS_SetProperty($cID, "Open", false);
-                    IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen                    
                 }
             }
         }
@@ -364,6 +374,8 @@
                 $this->mqtt->close();
                 $this->mqtt = NULL;
                 $this->OSave($this->mqtt,"MQTT");
+                $clientid = $this->GetClientID();
+                IPS_LogMessage(__CLASS__,__FUNCTION__."::Connection to ClientID $clientid lost");
             }
             $cID=$this->GetConnectionID();
             if($cID <> 0){
