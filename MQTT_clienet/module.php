@@ -333,6 +333,7 @@
         //
         //------------------------------------------------------------------------
         private function MQTTConnect(){
+            IPS_LogMessage(__CLASS__,__FUNCTION__."::Connect to cliend start");
             IPS_Sleep(1500);
             $cID=$this->GetConnectionID();
             if(is_null($this->mqtt)){
