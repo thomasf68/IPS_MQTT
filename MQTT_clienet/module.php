@@ -192,7 +192,7 @@
 
                         case self::KR_READY:
                             IPS_LogMessage(__CLASS__,__FUNCTION__." KR_Ready ->reconect");
-                            $this->MQTTDisconnect();
+                           // $this->MQTTDisconnect();
                             break;
  /*
                         case self::KR_UNINIT:
