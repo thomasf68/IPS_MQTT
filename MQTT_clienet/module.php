@@ -388,7 +388,7 @@
                 IF (IPS_GetProperty($cID,"Open")){
                     IPS_SetProperty($cID, "Open", FALSE); //I/O Instanz soll aktiviert sein.
                     IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen 
-                    IPS_Sleep(10);
+                    IPS_Sleep(10000);
                 }                                              
             }
             $this->RegisterTimerNow('Ping', 0,  'MQTT_TimerEvent('.$this->InstanceID.');');    
