@@ -317,7 +317,7 @@
         //------------------------------------------------------------------------
         //
         //------------------------------------------------------------------------
-        public function Publish(string $topic,string $content,int $qos = 0,int $retain = 0) {
+        public function Publish(string $topic,string $content, $qos = 0, $retain = 0) {
             if (!is_null($this->mqtt)){
                 $this->mqtt->publish($topic, $content, $qos, $retain);
             }else {
@@ -328,7 +328,7 @@
         //------------------------------------------------------------------------
         //
         //------------------------------------------------------------------------
-        public function Subscribe(string $topic, int $qos = 0) {
+        public function Subscribe(string $topic,  $qos = 0) {
             if (!is_null($this->mqtt)){
                 $this->mqtt->subscribe($topic, $qos);
             }else {
