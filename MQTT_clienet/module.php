@@ -226,41 +226,46 @@
          */
         public function ReceiveData($JSONString)
         {
-            //status check triggered by data
-            if ($this->isActive()) {
-                $this->SetStatus(self::ST_AKTIV);
-            } else {
-                $this->SetStatus(self::ST_INACTIV);
-                $this->debug(__FUNCTION__, 'Data arrived, but dropped because inactiv:' . $JSONString);
-                return;
-            }
-            // decode Data from Device Instanz
-            if (strlen($JSONString) > 0) {
-                $this->debug(__FUNCTION__, 'Data arrived:' . $JSONString);
-                $this->debuglog($JSONString);
-                // decode Data from IO Instanz
-                $data = json_decode($JSONString);
-                //entry for data from parent
+            if (!is_null($this->mqtt)){
+            
+                //status check triggered by data
+                if ($this->isActive()) {
+                    $this->SetStatus(self::ST_AKTIV);
+                } else {
+                    $this->SetStatus(self::ST_INACTIV);
+                    $this->debug(__FUNCTION__, 'Data arrived, but dropped because inactiv:' . $JSONString);
+                    return;
+                }
+                // decode Data from Device Instanz
+                if (strlen($JSONString) > 0) {
+                    $this->debug(__FUNCTION__, 'Data arrived:' . $JSONString);
+                    $this->debuglog($JSONString);
+                    // decode Data from IO Instanz
+                    $data = json_decode($JSONString);
+                    //entry for data from parent
 
-                if (is_object($data)) { $data = get_object_vars($data);}
-                if (isset($data['DataID'])) {
-                    $target = $data['DataID'];
-                    if ($target == $this->module_interfaces['IO-RX']) {
-                        $buffer = utf8_decode($data['Buffer']);
-                        $this->debug(__FUNCTION__, strToHex($buffer));
-                        $this->mqtt->receive($buffer);
-                        $sClass = serialize($this->mqtt);
-                        $this->SetBuffer ("MQTT",$sClass);   
-                        // Ping Timer neu setzen
-                        // $this->RegisterTimerNow('Ping', $this->mqtt->keepalive*1000,  'MQTT_TimerEvent('.$this->InstanceID.');');                            
-                    }//target
-                }//dataid
-                else {
-                    $this->debug(__FUNCTION__, 'No DataID supplied');
-                }//dataid
-            } else {
-                $this->debug(__FUNCTION__, 'strlen(JSONString) == 0');
-            }//else len json
+                    if (is_object($data)) { $data = get_object_vars($data);}
+                    if (isset($data['DataID'])) {
+                        $target = $data['DataID'];
+                        if ($target == $this->module_interfaces['IO-RX']) {
+                            $buffer = utf8_decode($data['Buffer']);
+                            $this->debug(__FUNCTION__, strToHex($buffer));
+                            $this->mqtt->receive($buffer);
+                            $sClass = serialize($this->mqtt);
+                            $this->SetBuffer ("MQTT",$sClass);   
+                            // Ping Timer neu setzen
+                            // $this->RegisterTimerNow('Ping', $this->mqtt->keepalive*1000,  'MQTT_TimerEvent('.$this->InstanceID.');');                            
+                        }//target
+                    }//dataid
+                    else {
+                        $this->debug(__FUNCTION__, 'No DataID supplied');
+                    }//dataid
+                } else {
+                    $this->debug(__FUNCTION__, 'strlen(JSONString) == 0');
+                }//else len json
+            }else{
+                $this->debug(__FUNCTION__, '$this->mqtt == null');                
+            }
         }//func
  
         /**
