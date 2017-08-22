@@ -92,7 +92,7 @@
             } else {
                 $this->SetStatus(self::ST_INACTIV);
                 $this->debug(__FUNCTION__,"Modul deaktiviert");  // Debug Fenster
-                $this->MQTTDisconnect();
+                $this->MQTTDisconnect(1);
             }
             
         }
@@ -171,15 +171,15 @@
                     switch ($Data[0]) {
                         case self::ST_AKTIV:
                             $this->debug(__CLASS__,__FUNCTION__."I/O Modul > Aktiviert");
-                           // $this->MQTTDisconnect();
+                           // $this->MQTTDisconnect(2);
                             break;
                         case self::ST_INACTIV:
                             $this->debug(__CLASS__,__FUNCTION__."I/O Modul > Deaktiviert");
-                            //$this->MQTTDisconnect();
+                            //$this->MQTTDisconnect(3);
                             break;
                         case self::ST_ERROR_0:
                             $this->debug(__CLASS__,__FUNCTION__."I/O Modul > Fehler");
-                            $this->MQTTDisconnect();
+                            $this->MQTTDisconnect(4);
                             break;
                         default:
                             IPS_LogMessage(__CLASS__,__FUNCTION__."I/O Modul unbekantes Ereignis ".$Data[0]);                     
@@ -192,7 +192,7 @@
 
                         case self::KR_READY:
                             IPS_LogMessage(__CLASS__,__FUNCTION__." KR_Ready ->reconect");
-                           // $this->MQTTDisconnect();
+                           // $this->MQTTDisconnect(5);
                             break;
  /*
                         case self::KR_UNINIT:
@@ -370,13 +370,13 @@
         //------------------------------------------------------------------------
         //
         //------------------------------------------------------------------------
-        private function MQTTDisconnect(){
+        private function MQTTDisconnect($call=""){
             if(!is_null($this->mqtt)){
                 $this->mqtt->close();
                 $this->mqtt = NULL;
                 $this->OSave($this->mqtt,"MQTT");
                 $clientid = $this->GetClientID();
-                IPS_LogMessage(__CLASS__,__FUNCTION__."::Connection to ClientID $clientid lost");
+                IPS_LogMessage(__CLASS__,__FUNCTION__."::Connection to ClientID $clientid lost ($call)");
             }
             $cID=$this->GetConnectionID();
             if($cID <> 0){
