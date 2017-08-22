@@ -603,6 +603,7 @@ class T2FModule extends IPSModule
         if (method_exists($this,"SendDebug")) {
             //available as of #150 (2016-04-22)
             $this->SendDebug($topic,$data,0);
+            IPS_LogMessage(__CLASS__,$topic."|".$data);
         }
     }
     //------------------------------------------------------------------------------
