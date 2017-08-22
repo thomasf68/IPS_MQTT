@@ -175,7 +175,9 @@
                             break;
                         case self::ST_INACTIV:
                             $this->debug(__CLASS__,__FUNCTION__."I/O Modul > Deaktiviert");
-                            //$this->MQTTDisconnect(3);
+                            if($this->GetInstanceStatus() == self::ST_AKTIV ){       
+                                $this->MQTTConnect();
+                            }
                             break;
                         case self::ST_ERROR_0:
                             $this->debug(__CLASS__,__FUNCTION__."I/O Modul > Fehler");
@@ -388,13 +390,12 @@
                 IF (IPS_GetProperty($cID,"Open")){
                     IPS_SetProperty($cID, "Open", FALSE); //I/O Instanz soll aktiviert sein.
                     IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen 
-                    IPS_Sleep(10000);
                 }                                              
             }
             $this->RegisterTimerNow('Ping', 0,  'MQTT_TimerEvent('.$this->InstanceID.');');    
-            if($this->GetInstanceStatus() == self::ST_AKTIV ){       
-                $this->MQTTConnect();
-            }
+//            if($this->GetInstanceStatus() == self::ST_AKTIV ){       
+//                $this->MQTTConnect();
+//            }
         }
         //------------------------------------------------------------------------
         //
