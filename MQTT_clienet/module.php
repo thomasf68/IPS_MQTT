@@ -250,7 +250,7 @@
                     if (isset($data['DataID'])) {
                         $target = $data['DataID'];
                         if ($target == $this->module_interfaces['IO-RX']) {
-                            $buffer = utf8_decode($data['Buffer']);
+                            $buffer = $data['Buffer'];
                             $this->debug(__FUNCTION__, strToHex($buffer));
                             $this->mqtt->receive($buffer);
                             $sClass = serialize($this->mqtt);
@@ -281,7 +281,7 @@
             $res = false;
             $json = json_encode(
                 array("DataID" => $this->module_interfaces['IO-TX'],
-                    "Buffer" => utf8_encode($Data)));
+                    "Buffer" => $Data));
             if ($this->HasActiveParent()) {
                 $this->debug(__FUNCTION__, strToHex($Data));
                 $res = parent::SendDataToParent($json);
