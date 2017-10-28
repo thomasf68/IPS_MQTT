@@ -342,8 +342,15 @@
         //------------------------------------------------------------------------
         private function MQTTConnect(){
             IPS_LogMessage(__CLASS__,__FUNCTION__."::Connect to cliend start");
-            IPS_Sleep(1500);
             $cID=$this->GetConnectionID();
+            // sicherstellen das die Verbindung geschlossen ist
+            if($cID <> 0){
+                IF (@IPS_GetProperty($cID,"Open")){
+                    IPS_SetProperty($cID, "Open", FALSE); //I/O Instanz soll aktiviert sein.
+                    IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen 
+                }                                              
+            }
+            IPS_Sleep(1500);
             if(is_null($this->mqtt)){
                 $ok = @IPS_SetProperty($cID, "Open", true); //I/O Instanz soll aktiviert sein.
                 if($ok){
