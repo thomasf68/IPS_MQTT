@@ -329,6 +329,7 @@
         //
         //------------------------------------------------------------------------
         public function Subscribe(string $topic,  $qos = 0) {
+            IPS_LogMessage(__CLASS__,__FUNCTION__."::Subscribe topic: ".$topic);
             if (!is_null($this->mqtt)){
                 $this->mqtt->subscribe($topic, $qos);
             }else {
