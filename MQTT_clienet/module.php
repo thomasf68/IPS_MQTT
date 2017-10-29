@@ -194,7 +194,7 @@
 
                         case self::KR_READY:
                             IPS_LogMessage(__CLASS__,__FUNCTION__." KR_Ready ->reconect");
-                           // $this->MQTTDisconnect(5);
+                            $this->MQTTDisconnect(5);
                             break;
  /*
                         case self::KR_UNINIT:
@@ -348,6 +348,7 @@
                 IF (@IPS_GetProperty($cID,"Open")){
                     IPS_SetProperty($cID, "Open", FALSE); //I/O Instanz soll aktiviert sein.
                     IPS_ApplyChanges($cID); //Neue Konfiguration übernehmen 
+                    return;
                 }                                              
             }
             IPS_Sleep(1500);
