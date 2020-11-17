@@ -1,7 +1,9 @@
 # IPS_MQTT
 MQTT Modul für IP-Symcon 4.1
+getestet mit IP-Symcon 5.5
 
 Das Modul unterstützt das minimal Nötige um über MQTT Daten Sendent und Empangen zu können.
+Der Name des Moduls ist von "MQTT Client" auf "MQTT Client ext" geändert wegen der Namensgleichheut mit den nativen Modul aus 5.5
 
 
 Befehle:
