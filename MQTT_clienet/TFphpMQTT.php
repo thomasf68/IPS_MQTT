@@ -126,8 +126,8 @@ class phpMQTT {
 		if($this->password) $buffer .= $this->strwritestring($this->password,$i);
 
 		$head = "  ";
-		$head{0} = chr(0x10);
-		$head{1} = chr($i);
+		$head[0] = chr(0x10);
+		$head[1] = chr($i);
 
                 // Sende Daten
 //		fwrite($this->socket, $head, 2);
@@ -191,7 +191,7 @@ class phpMQTT {
                 
                 switch($cmd){
                     case 2:         // CONNACK, Connect acknowledgment
-                        if ($string{1} == chr(0)){
+                        if ($string[1] == chr(0)){
                             if($this->debug) {
                                 $call = $this->onDebug;
                                 $this->owner->$call(__FUNCTION__,"Connected to broker ok");
@@ -291,8 +291,8 @@ class phpMQTT {
 	/* disconnect: sends a proper disconect cmd */
 	function disconnect(){
 			$head = " ";
-			$head{0} = chr(0xe0);		
-			$head{1} = chr(0x00);
+			$head[0] = chr(0xe0);		
+			$head[1] = chr(0x00);
 			//fwrite($this->socket, $head, 2);
                         $call = $this->onSend;
                         $this->owner->$call($head);
@@ -330,7 +330,7 @@ class phpMQTT {
                 $cmd += 1;
             }
 
-            $head{0} = chr($cmd);		
+            $head[0] = chr($cmd);		
             $head .= $this->setmsglength($i);
 
             $call = $this->onSend;
@@ -340,7 +340,7 @@ class phpMQTT {
 
 	/* message: processes a recieved topic */
 	function message($msg){
-            $tlen = (ord($msg{0})<<8) + ord($msg{1});
+            $tlen = (ord($msg[0])<<8) + ord($msg[1]);
             $topic = substr($msg,2,$tlen);
             $msg = substr($msg,($tlen+2));
             $cmd = "MQTT_GET_PAYLOAD";
