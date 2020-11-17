@@ -296,7 +296,7 @@
             $this->debug($topic, $data);
         }
  
-        public function onReceive(string $para) {
+        public function onReceive($para) {
             if($para['SENDER']=='MQTT_CONNECT'){
                 $clientid=$this->GetClientID();                               
                 IPS_LogMessage(__CLASS__,__FUNCTION__."::Connection to ClientID $clientid run");                
